@@ -1,0 +1,104 @@
+<?php
+require_once "../models/DisciplineModel.php";
+class DisciplineController
+{
+    private $disci;
+    private $grpDisci;
+    private $classdiscip;
+
+    function __construct(
+    ) {
+        $this->disci = new NiveauModel();
+
+        $this->grpDisci = new DisciplineModel();
+
+        $this->classdiscip = new DisciplineModel();
+    }
+
+    public function listerDiscipline()
+    {
+        $discipl = $this->disci->getAllNiveau();
+        $grdiscipl = $this->grpDisci->recupDonneeDiscip();
+        require_once "../views/Discipline.html.php";
+    }
+
+    public function getClasseDiscipline()
+    {
+        $idClass = $_GET['id'];
+        $classeDisci = $this->classdiscip->recupDonneeDiscipClasse($idClass);
+        echo json_encode($classeDisci);
+
+    }
+    public function addDiscipline()
+    {
+
+        $data = json_decode(file_get_contents('php://input'), true);
+        $discipl = $this->grpDisci->insertDisc($data['name_discipl'], $data['id_grdisci'], 'ZPE');
+        $this->grpDisci->insertClassDisc($data['id_class'], $discipl);
+
+        echo json_encode($data);
+    }
+ public function misAjour()
+    {
+        $data= json_decode(file_get_contents('php://input'), true);
+        foreach ($data['discipline'] as $key ) {
+            var_dump($key);
+           $this->grpDisci->updateClasseDiscipline($key);
+       }
+    } 
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// public function addDiscipline()
+// {
+
+//     $data = json_decode(file_get_contents('php://input'), true);
+//     $test = $this->grpDisci->existenceDiscipline($data['name_discipl']);
+//     $test1 = $this->grpDisci->existenceClassDiscipli($data['id_Discipline'],$data['id_cla']);
+
+
+//     if ($test === false) {
+//       /*   $this->grpDisci->insertClassDisc($data['id_class'],$data['idDiscip']); */
+//         $discipl = $this->grpDisci->insertDisc($data['name_discipl'], $data['id_grdisci'], 'PJM');
+//         $this->grpDisci->insertClassDisc($data['id_class'], $discipl);
+//     } else {
+//        if ($test1 === false) {
+//            $this->grpDisci->insertClassDisc($data['id_class'], $discipl);           
+
+//        } else {
+//     }
+
+//     }
+//     echo json_encode($data);
+// }
+
+// public function misAjour()
+// {
+// # code...
+// } 
+
